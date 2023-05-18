@@ -16,6 +16,7 @@ function App() {
         .then((response) => response.data)
         .then((data) => {
           setMusicFestivals(data);
+          formatMusicFestivals(data);
           return data
         }
         )
@@ -31,6 +32,27 @@ function App() {
     }
   }
 
+  const formatMusicFestivals = (data) => {
+    console.log('data inside formatMusicFestivals is::', data);
+    let recordLabelsMap = {};
+    let recordLabelsTmp = []
+    if (data.length > 0) {
+      data.map((musicFestival, index) => {
+        musicFestival.bands.map((band, index) => {
+          recordLabelsMap[band.recordLabel] = recordLabelsMap[band.recordLabel] === undefined
+            ? 1
+            : recordLabelsMap[band.recordLabel] + 1
+          if (recordLabelsMap[band.recordLabel] === 1) {
+            recordLabelsTmp.push(band.recordLabel)
+          }
+          recordLabelsTmp.sort((a, b) => a > b ? 1 : b > a ? -1 : 0);
+        })
+      })
+
+    }
+    setRecordLabels(recordLabelsTmp);
+    console.log("recordLabelsTmp is::", recordLabelsTmp.toString());
+  }
 
 
   useEffect(() => {
