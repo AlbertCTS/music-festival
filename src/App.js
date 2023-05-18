@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
-import { baseAPIURL, getFestivals } from './util/http';
+import { baseAPIURL } from './util/http';
 
 function App() {
 
@@ -11,8 +11,7 @@ function App() {
 
   const getFestivals = async () => {
     try {
-      // const response = axios.get('https://eacp.energyaustralia.com.au/codingtest/api/v1/festivals');
-      const res = await axios.get('http://localhost:5000/codingtest/api/v1/festivals')
+      const res = await axios.get(baseAPIURL)
         .then((response) => response.data)
         .then((data) => {
           setMusicFestivals(data);
