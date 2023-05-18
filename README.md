@@ -6,6 +6,26 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm install`
+
+Install all the dependencies of the APP
+
+
+## Running the APP and assumptions
+
+### Notes:
+1. As the data from the API block CORS, so I created a Middleware as Proxy for React Front-End to fetch data;
+2. I treated recordLabel ==="", recordLabel ===undefined, recordLabel ===null the same as recordLabel ===""
+
+### Running steps
+Steps:
+
+1. Download and run the music-cors to start the Middleware as a Proxy for getting the API data.
+
+### `node app.js`
+
+2. After the music-cors Back-end Middleware Proxy started, then in the music-festival use the following script to run the APP.
+
 ### `npm start`
 
 Runs the app in the development mode.\

@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import { baseAPIURL } from './util/http';
+import './styles/styles.css';
 
 function App() {
 
-  const [musicFestivals, setMusicFestivals] = useState([]);
-  const [recordLabels, setRecordLabels] = useState([]);
   const [formattedResults, setFormattedResults] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -20,7 +19,6 @@ function App() {
           return data
         }
         )
-      console.log('res data is::', res);
     } catch (err) {
       if (err.response && err.response.status === 429) {
         console.log('Too Many Requests!');
@@ -33,7 +31,6 @@ function App() {
   }
 
   const formatMusicFestivals = (data) => {
-    console.log('data inside formatMusicFestivals is::', data);
     let recordLabelsMap = {};
     let recordLabelsTmp = []
     if (data.length > 0) {
@@ -41,6 +38,7 @@ function App() {
       // Take all the recordLabels out and store in recordLabels
       data.map((musicFestival, index) => {
         musicFestival.bands.map((band, index) => {
+          //  Treated recordLabel ==="", undefined, null as same as ""
           if (band.recordLabel === "" || band.recordLabel === undefined || band.recordLabel === null) {
             recordLabelsMap[""] = recordLabelsMap[""] === undefined ? 1 : recordLabelsMap[""] + 1;
             if (recordLabelsMap[""] === 1) {
@@ -58,16 +56,11 @@ function App() {
           recordLabelsTmp.sort();
         })
       })
-      // setRecordLabels(recordLabelsTmp);
-      console.log("recordLabelsTmp is::", recordLabelsTmp.toString());
 
       // Loop the recordLabelsTmp and push the bands name to recordLabels, and festivals name to bands
       let formattedResults = [];
       let recordLabelObj = {};
-      let bandsTmp = [];
       let bandObj = {};
-      let FestivalsTmp = [];
-      let bandNameTmp = "";
       recordLabelsTmp.map((recordLabel, index) => {
         data.map((musicFestival, index) => {
           musicFestival.bands.map((band, index) => {
@@ -86,13 +79,11 @@ function App() {
         // Sort the bandObj by keys
         let sortedBandObj = Object.keys(bandObj).sort().reduce(
           (obj, key) => {
-            console.log('bandObj[key] is::', bandObj[key]);
             obj[key] = bandObj[key].sort();
             return obj;
           }, {}
         );
 
-        console.log('bandObj is::', JSON.stringify(Object.entries(sortedBandObj)));
         if (recordLabelObj[recordLabel] === undefined) {
           recordLabelObj["recordLabel"] = recordLabel;
           recordLabelObj["bands"] = Object.entries(sortedBandObj);
@@ -105,35 +96,9 @@ function App() {
 
 
       setFormattedResults(formattedResults);
-      console.log("formattedResults is::", JSON.stringify(formattedResults));
     }
 
-    // let testObj = {};
-    // let testArr = [];
-    // testArr.push('a');
-    // testArr.push('b');
-    // testArr.push('c');
-    // testObj['name'] = testArr;
-    // console.log('testObj is::', JSON.stringify(testObj));
   }
-
-
-  // [
-  //   {
-  //     "recordLabel": "recordLabel 1",
-  //       "bands":{
-  //         "band 1": [festival1, fes2],      
-  //         "band 2": [festival1, fes2]
-  //       }     
-  //   },
-  //   {
-  //     "recordLabel 2": 
-  //       {
-  //         "band x": [festival1, fes2],       
-  //         "band y": [festival1, fes2]
-  //       }
-  //   }
-  // ]
 
   useEffect(() => {
     getFestivals();
@@ -146,51 +111,17 @@ function App() {
       <center>
         {formattedResults.length !== 0 ? formattedResults.map((recordLabel, index) => {
           return (
-            <div
-              style={{
-                width: '100%',
-                backgroundColor: "#35D841",
-                padding: 2,
-                borderRadius: 10,
-                marginBlock: 10,
-                textAlign: 'left',
-              }}
-            >
-              <div
-                style={{
-                  width: '100%',
-                  backgroundColor: "grey",
-                  padding: 2,
-                  borderRadius: 1,
-                  marginBlock: 4,
-                  textAlign: 'left',
-                }}
-              >
+            <div className='ListContainer'>
+              <div className='RecordLabel'>
                 <p style={{ fontSize: 25, color: 'white' }}>{recordLabel.recordLabel}</p>
               </div>
               {recordLabel.bands.map((band, index) => {
                 return (
-                  <div
-                    style={{
-                      width: '100%',
-                      backgroundColor: "lightgrey",
-                      padding: 2,
-                      borderRadius: 1,
-                      marginBlock: 2,
-                    }}
-                  >
+                  <div className='BandName'>
                     <p style={{ fontSize: 20, color: 'blue' }}>&emsp;{band[0]}</p>
                     {band[1].map((festival, index) => {
                       return (
-                        <div
-                          style={{
-                            width: '100%',
-                            backgroundColor: "white",
-                            padding: 2,
-                            borderRadius: 1,
-                            marginBlock: 2,
-                          }}
-                        >
+                        <div className='Festival'>
                           <p style={{ fontSize: 15, color: 'black' }}>&emsp;&emsp;&emsp;{festival}</p>
                         </div>
                       )
